@@ -1,0 +1,500 @@
+\documentclass[11pt]{article}                % Comment this line out
+                                                          % if you need a4paper
+%%%%%% FOR TIKZ %%%%%%%%%
+%
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,chains,matrix,positioning,scopes,shadows,calc}
+\usetikzlibrary{decorations.pathmorphing,decorations.pathreplacing,decorations.shapes,snakes}
+%
+%%%%%% END FOR TIKZ %%%%%%%%
+
+%%% Todos
+\newcommand{\todo}[1]{\vspace{5 mm}\par \noindent
+\marginpar{\textsc{ToDo}} \framebox{\begin{minipage}[c]{0.95
+\textwidth} \tt #1 \end{minipage}}\vspace{5 mm}\par}
+%
+\usepackage{/Users/ravibanavar/PBMacBook_26_05_09/TEX_myhelp/macros}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+% \usepackage{MnSymbol}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{graphics}
+\usepackage{multirow}
+\usepackage{empheq}
+\usepackage{rotating}
+\usepackage{tikz}
+%\usepackage{a4wide}
+
+\title{A geometric approach to modeling and controlof a Variable Speed Control Moment Gyro (VSCMG)}
+	\author{Ravi N. Banavar and Arjun Narayanan \\
+	\address{Systems and Control Engineering, \\
+        Indian Institute of Technology Bombay, \\  Powai, Mumbai 400076, India. \\
+        {\tt\small banavar@sc.iitb.ac.in}}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FOR TIKZ %%%%%%%%%%%%%%%%%%%%%%%%%
+\tikzstyle{point}= [coordinate]
+\tikzstyle{block} = [rectangle, draw, text width=1.5cm, text badly centered, node distance=2cm, minimum
+height=1cm]
+\tikzstyle{sum} = [circle, draw, node distance=2cm, minimum height=0.6cm]
+\tikzstyle{arrow} = [draw, thick, -latex', shorten >= 0.4mm]
+\tikzstyle{line} = [draw, thick]
+\tikzstyle{bridge}=[draw,double=gray, double distance=4mm]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END FOR TIKZ %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\maketitle
+
+\begin{abstract}
+%
+	Internal actuation mechanisms o control a rigid body, 
+	like momentum wheels and control moment gyros (CMGs),
+	have found much usage in spacecrafts and robotics.
+
+	The Variable Speed Control Moment Gyro (VSCMG) has been much studied
+	 in the aerospace and control community. There have been two distinct schools of work - 
+	 one from the 
+	aerospace community and the other from the geometric mechanics community.  The former
+	adopts the Newtonian approach to derive the equations of motion and then goes on to study 
+	singularity issues and control law synthesis. 
+	The latter adopt tools from geometric mechanics - 
+	principle fiber bundles, energy-Casimir notions - to derive control laws, though restricted to 
+	spin stabilization and not full attitude control. This paper attempts to make connections 
+	with the two approaches.
+
+\end{abstract}
+%
+\section{Modelling in a geometric framework}
+%
+	We first model a single variable-speed CMG using the geometric framework. We then 
+	compare the equations obtained with those in SRJ which are highly cited in the 
+	aerospace literature.
+	%
+	\subsection{ Configuration space and moments of inertia}
+	%
+          With reference to the single CMG model as seen in figure, we explain our notation as:
+          \\
+          Viewed as a rigid body with independent of the 
+           %----------------------------
+	     %
+           The significant differences in our approach as compared to the one by Schaub {\et al} are:
+           %
+           \been
+           %
+           \item We use the Riemannian metric to express the kinetic energy and then the momentum map to
+                    express the equations of motion
+                    %
+           \item The 
+           %
+           \een
+           %
+
+          The configuration space is $Q = \SO3 \times \Sone \times \Sone $. 
+          The first element denotes the 
+          attitude $R_s$ of the spacecraft with respect to fixed frame, the second denotes the degree of 
+          freedom $\beta$ of the gimbal frame, the third denotes the degree of freedom 
+          $\gamma$ of the 
+          rotor about its  spin axis. For the purpose of later geoemtrical interpretation, we club
+          $x \deff (\beta, \gamma)$.
+          
+          There are three rigid bodies involved here, 
+          each having relative motion (rotation) about the other. Three frames of reference
+          are chosen - the first is the 
+          spacecraft, denoted by the subscript $s$, the second is the gimbal frame, denoted by the 
+          subscript $g$, the third is the rotor frame, denoted by the subscript $r$.        %
+          The moments of inertia of the homogeneous rotor and the gimbal in their respective 
+          body frames are assumed to be
+          %
+          \begin{align}
+             \Irotord=  \pmat{J_x & 0 & 0 \\ 0 & J_x &  0  \\  0  &  0  & J_z } \;\;\;
+             \Igimbal = \pmat{I_t & 0 & 0 \\ 0 & I_g &  0  \\  0  &  0  & I_s }
+          \end{align}
+            Since the rotor is 
+          assumed to be homogeneous and symmetric, its inertia is represented in the gimbal frame  and
+            the combined gimbal-rotor inertia is rewritten as     
+               %
+          \begin{align}
+                 \Igimrot= \pmat{(J_x + I_t)& 0 & 0 \\ 0 & (J_x + I_g) &  0  \\  0  &  0  & (J_z + I_s) }
+          \end{align}
+          %
+          If the rotational transformation that relates the gimbal frame to the spacecraft frame is 
+          given by $R_{\beta}$, where
+          $\beta$ denotes the gimballing angle,
+          then the gimbal-rotor inertia reflected in the spacecraft frame is
+          %
+           \begin{align}
+          (\Igimrot)_s \deff R_{\beta}  \Igimrot R_{\beta}^T
+           \end{align}
+	     %
+	     Here the subscript $s$ denotes the spacecraft frame.
+\subsection{Group action and kinetic energy}
+	%	     
+	     The action of the $\SO3$ group  on $Q$ is given by 
+	     %
+	     \begin{align}
+	           \SO3 \times Q \rta Q \;\;\;\;\;\;   (M , (R_s, \beta, \gamma))  \rta (MR_s, \beta, \gamma)
+	     \end{align}
+	     %
+	     and the tangent lifted action is given by 
+	     %
+	     \begin{align}
+	           T \SO3 \times TQ \rta TQ \;\;\;   (v_{R_s}, v_{\beta}, v_{\gamma})  \rta 
+	            (Mv_{R_s}, v_{\beta}, v_{\gamma})
+	     \end{align}
+	     %
+	     If $\Omega_s = R_s^T \dot{R}_s$ denotes the angular velocity of the satellite in its
+	     body frame, then the kinetic energy is given by
+	      %
+	      \begin{align}
+	           \frac{1}{2} \inprod{  \Omega_s}{   \Is  \Omega_s}
+	      \end{align}    
+	      and the kinetic energy of the gimbal-rotor unit is given by
+	     %
+	     \begin{align}
+	      \frac{1}{2} \inprod{R_{\beta}^T \Omega_s + \pmat{0 \\ \dot{\beta} \\ \dot{\gamma}} }
+	                         {\Igimrot  [ R_{\beta}^T \Omega_s + \pmat{0 \\ \dot{\beta} \\ \dot{\gamma}} ] }
+	      \end{align}
+	      %
+		The total kinetic energy is
+	      %
+	      \begin{align}
+	      %
+	              \frac{1}{2} \inprod{  \pmat{\Omega_s \\ 0 \\ \dot{\beta} \\ \dot{\gamma}}   }
+	                         { \Itot   \pmat{\Omega_s \\ 0 \\ \dot{\beta} \\ \dot{\gamma}}     }
+	      %
+	      \end{align}
+	      %
+	      where 
+	      %
+	       \begin{align}
+	       %
+	       \Itot(\beta)= \pmat{ (R_{\beta}  \Igimrot R_{\beta}^T + \Is)  &  R_{\beta} \Igimrot  \\  \Igimrot  
+	                              R_{\beta}^T &  \Igimrot   }
+	       %
+	      \end{align} 
+	               %------------------------------
+	      %
+	      \begin{claim}
+	      %
+	            Under the defined group action, the kinetic energy of the total system 
+	            remains invariant.
+	      %
+	      \end{claim}      
+	      %
+	      \proof  \\
+	      Straightforward.
+	      \\
+	      $\Box.$
+	      %
+\subsection{A Riemannian structure}
+%
+		The kinetic energy induced a metric on the configuration space $Q$ of the
+		system, which enables us to impart a Riemannian structure
+		to the system. The Riemannian metric $\riem$, 
+	      is expressed as 
+	      %
+	        \begin{align}
+	        %
+	             \inprod{v_q}{w_q}_{\riem} = \riem (R_s, (\beta, \gamma)) ((R_s \hat{\Omega}_1 , (v_1, v_2)),
+	                                                           ((R_s \hat{\eta}_2 , (w_1, w_2))       
+	        \end{align}
+	        %
+	        \begin{align}
+	                       =  \frac{1}{2} \inprod{  \pmat{R_s \hat{\Omega}_1 \\ 0 \\ v_1 \\ v_2 }   }
+	                         { \Itot   \pmat{R_s \hat{\eta}_2 \\ 0 \\ w_1 \\  w_2 }     }                                                                             
+	        %
+	        \end{align}
+		where $q = (R_s, (\beta, \gamma)) \in Q $ and $v_q = (R_s\hat{\Omega}_1, (v_1,v_2)), 
+		w_q = (R_s\hat{\Omega}_2, (w_1,w_2)) \in T_qQ$. Here $\hat{\Omega}_1$ and
+		$ \hat{\Omega}_2$
+		belong to the Lie algebra $\so3$
+		%
+\subsection{Principle fiber bundle}
+%
+	      More geometric structure is present in the problem. The gimbal angle and the rotor angle 
+	      could be viewed as variables in a {\it shape space (or base space)} and the rigid body 
+	      orientation could be viewed as a variable in a {\it fiber space}, and with a few additional
+	      requirements, the model is
+	      amenable to a principal fiber bundle description. See \cite{} for more details on 
+	      describing mechanical systems in a fiber bundle framework.
+	      Based on the above model description, we identify the principle fiber bundle 
+	      $(Q, B, \pi, G)$,
+	      where $Q = \SO3 \times \Sone \times \Sone$, 
+	      $B = \Sone \times \Sone $ and $\pi: Q \rta B$ is the bundle projection.
+	       We now define
+	      a few mechanical quantities on this fiber bundle. 
+	      \bei
+	      % 
+	      \item 
+	      The {\it infinitesimal generator} of the Lie algebraic 
+	      element $\hat{\eta} \in \so3$ under the group action is the vector field 
+	      %
+	      \begin{align}
+	      %
+	      \hat{\eta}_{Q}(q) = \frac{d}{dt}|_{t=0} (\exp(\hat{\eta}t) R_s, (\beta, \gamma)) = 
+	                                 (\hat{\eta}R_s, (0, 0))
+	     %
+	      \end{align}
+%
+		\item The {\it momentum map} $J : TQ \rta \so3^*$ is given by
+	      %
+	      \begin{align}
+	      %
+	      [J(q, v_q), \xi] = \inprod{ v_q   }{  \hat{\xi}_Q(q) }_{\riem}
+	      %
+	      \end{align}
+	      %
+	      and 
+	      since the kinetic energy is invariant under the action of the $\SO3$ group, we have
+	      %
+	       \begin{align}
+	       %
+	             \inprod{ v_q   }{  \hat{\xi}_Q(q) }_{\riem} = \inprod{ v_{(e,(\beta,\gamma))} }
+	                                                                 {(R_s^T \hat{\xi} R_s,(0,0))  }_{\riem}
+	       %
+	       \end{align}
+	       %
+	       which yields
+	       %
+	       \begin{align}
+	       %
+	        [J(q, v_q), \hat{\xi}] =  \inprod{Ad_{R_s^T}^* [ (\Igimrot)_s + \Is) \Omega_s + R_{\beta} \Igimrot \pmat{ 0  \\  \dot{\beta}
+	                                                      \\  \dot{\gamma} }   ] }{\xi}
+	       \end{align}
+	       %
+	       Please note that $\inprod{\cdot}{\cdot}$ denotes the inner product, while 
+	       $[\cdot, \cdot]$ denotes the primal-dual action of the vector spaces $\so3$ and
+	       $\so3^*.$
+	       Since the total spatial angular momentum of the system is constant, say $\mu$, 
+	       the above expression
+	       yields
+	       %
+	       \begin{align}
+	       %
+	       \mu = Ad_{R_s^T}^* [ (\Igimrot)_s + \Is) \Omega_s + R_{\beta} \Igimrot \pmat{ 0  \\  \dot{\beta}
+	                                                      \\  \dot{\gamma} }   ]   \\
+	                = 
+	       \end{align}
+	       %
+	 	\item 
+	 	   The {\it locked inertia tensor} at each point $q \in Q$ is the mapping 
+	      %
+	      \begin{align}  \mathbb I (q): \so3 \rta \so3^* \end{align}
+	      %
+	      and is defined as  
+	      %
+	      \begin{align}  [ \mathbb I(q) \eta, \xi ] = \riem (q)) ((\hat{\eta} R_s , (0,0)),
+	                                                           (\hat{\xi} R_s , (0, 0))       
+	      %
+	      \end{align}
+	      %
+	      \item 
+	      The {\it mechanical connection} is then defined as  the $\so3$-valued one-form	
+	      %
+	      \begin{align}
+	      %  
+	      		\alpha: TQ \rta \so3 \;\;\;\; (q, v_q) \rta \alpha(q, v_q) = {\mathbb I(q)}^{-1} J(q,v_q)
+	      \end{align}
+	      %
+	      	\ei
+      %
+	                   
+	       With the state-space as $X \deff (R_s, (\beta, \gamma)) = (R_s, x)$, where $x \deff (\beta, \gamma)$ 
+	       and defining $\Itilde =  (R_{\beta}  \Igimrot R_{\beta}^T + \Is) $, the control inputs
+	       (gimbal velocity and rotor spin)  at the kinematic
+	       level as $u \deff \dot{x} = (\dot{\beta}, \dot{\gamma}) = \pmat{u_{\beta}  \\  
+	       u _{\gamma} } $,
+	       the affine-in-the-control system model is
+	      %
+	       \begin{align}
+	       %
+	             \dot{X} = f(X) + g(X) u 
+	             %
+	       \end{align}
+	       %
+	       where the drift and control vector fields are given by 
+	       %
+	       \begin{align}
+	       %
+	            f(X) = \pmat{R_s  \skew{ (  \Itilde^{-1} (Ad_{R_s}^* \mu))   }    \\  0 }  
+	       %
+	       \end{align}
+	       %
+	       \begin{align}
+	       %
+	            g_{\beta}(X) =  \pmat{- R_s  \skew{   (\Itilde^{-1}  (Ad_{R_\beta^T}^* (\Igimrot i_2))  }   
+	             \\  
+	                                     \pmat{1  \\  0}   }
+	            \;\;\;\;\;
+	            g_{\gamma}(X) =  \pmat{- R_s  \skew{ (\Itilde^{-1}  (Ad_{R_\beta^T}^* (\Igimrot i_3))  }     
+	             \\  
+	                                      \pmat{0  \\   1}     }
+	       %
+	       \end{align}
+	       %
+	       Here  $\skew{\cdot} : \R^3 \rta \so3$ is given by 
+	       %
+	       \begin{align}
+	       %
+	       \skew{(\psi_1, \psi_2, \psi_3)} \deff 
+	       \pmat{ 0 &  - \psi_3  &  \psi_2  \\  \psi_3  &  0  &  -\psi_1  \\  
+	                                                      - \psi_2  &  \psi_1  &  0 }
+	        %
+	        \end{align}
+	        %
+	        
+\section{The dynamic model}
+%
+		To arrive at the dynamic model we proceed as follows.
+		From the expression for the total momentum 
+		%%
+	       \begin{align}
+	       %
+	       \mu = Ad_{R_s^T}^* [ ((\Igimrot)_s + \Is) \Omega_s + R_{\beta} \Igimrot \pmat{ 0  \\  \dot{\beta}
+	                                                      \\  \dot{\gamma} }   ]   \\
+	                = 
+	       \end{align}
+	       %
+	       we have
+	       %
+	       \begin{align}  \mu = R_s \pmat{ \Itilde & R_{\beta} \Igimrot}  \pmat{\Omega_s 
+	       \\  \pmat{ 0  \\  \dot{\beta}  \\  \dot{\gamma} }  }
+	       \end{align}
+	       %
+	       We split the momentum in to two components - one due to the gimbal-rotor unit and the other due to
+	       the rigid spacecraft. Further, we assume an internal torque $\tau_b$ (in the gimbal-rotor fame)
+	       acting on the gimbal and rotor unit. We then have, due to the principle of action and
+	       reaction
+	       %
+	       \begin{align}
+	       %
+	       	\frac{d}{dt} (R_s \Is \Omega_s) = \underbrace{- R_s \tau_b}_{reaction}
+		\;\;\;\; \;\;
+		       \frac{d}{dt} ( R_s [ R_{\beta} \Igimrot R_{\beta}^T \Omega_s + R_{\beta} \Igimrot \dot{x} ] )
+		       = \underbrace{R_s \tau_b}_{action}
+	       \end{align}  
+		We now simplify this expression to obtain more explicit equations, which we then 
+		compare with certain other results.
+		\[
+		[ \hat{\Omega}_s \Itilde \Omega_s  +  \Itilde \dot{\Omega}_s ] 
+		\]
+		%
+		\begin{align}
+		%  
+		= \hat{\Omega}_s R_{\beta} \Igimrot \dot{x} - \dot{\beta} R_{\beta} {\cal U} R_{\beta}^T
+		\Omega_s - \dot{\beta} R_{\beta} \hat{i}_2 \Igimrot \dot{x} - R_{\beta} \Igimrot 
+		\ddot{x}
+		\end{align}
+		%
+		where ${\cal U} \deff \hat{i}_2 \Igimrot - \Igimrot \hat{i}_2$ is a symmetric matrix.
+		
+		
+\section{The classical CMG modeling and analysis}		
+
+		We now draw connections between the approach outlined in the previous sections
+		with that of  the classical CMG modeling and analysis done in the Newtonian 
+		framework in \cite{srj}, which is
+		cited in much of the aerospace literature. We shall refer to this paper as the SRJ paper
+		henceforth. We first relate the notation and then establish a 
+		connection with the main equations of the SRJ paper. 
+		
+		The two primary variables in the SRJ paper and ours are related as follows:
+		%
+		\begin{center}
+		\begin{tabular}{||  l  |  l   |  l   || }
+		\hline
+		Gimbal angle  & Our notation  - $\beta$  & SRJ notation - $\gamma$ \\
+		\hline
+		Rotor spin magnitude  & Our notation  - $\dot{\gamma}$  & SRJ notation - $\Omega$ \\
+		\hline
+		Satellite angular velocity  & Our notation  - $\Omega_s$  & SRJ notation - $\omega$ 
+		\\
+		\hline
+		\end{tabular}
+		\end{center}
+		%
+		The rotation matrix in the SRJ paper, relating the gimbal and spacecraft-body frame, 
+		 is described in terms of three column vectors 
+		of unit norm, $\{ \hat{g}_s, \hat{g}_{t}, \hat{g}_g \}$, where the subscripts $s, t$ and
+		$g$ correspond to the {\it spin, transverse and gimbal} axes,  as
+		%
+		\begin{align} \pmat{| & | & |  \\  \hat{g}_s & \hat{g}_{t} & \hat{g}_g  \\ | & | & |  \\ }
+		\end{align}
+		%
+		and further,
+		\begin{align}
+			\pmat{ \inprod{\hat{g}_s}{\omega} \\  \inprod{\hat{g}_{t}}{\omega}  \\ 
+			 \inprod{\hat{g}_{g}}{\omega}    } = \pmat{  \omega_s  \\ \omega_t  \\  \omega_g }
+		\end{align} 
+		In our convention, the following correspondence holds: 
+		%
+		\begin{align} 
+			R_{\beta} \longrightarrow 
+			 \pmat{| & | & |  \\  \hat{g}_t & \hat{g}_{g} & \hat{g}_s  \\ | & | & |  \\ }
+		\end{align}
+		and
+		%
+		\begin{align}
+		%
+			R_{\beta}^T \Omega_s \longrightarrow 
+			 \pmat{  \omega_t  \\ \omega_g  \\  \omega_s }
+		%
+		\end{align}
+		The SRJ equation of motion (eqn. xxx) written partially in terms of our notation is
+		%
+		\begin{align}
+		%  
+			\Itilde \dot{\Omega}_s + \hat{\Omega}_s \Itilde \Omega_s = 
+		\end{align}
+		%
+		\begin{align}
+			- \hat{g}_s [ J_s (\ddot{\gamma} + \dot{\beta} \omega_t)  - (J_t - J_g) \omega_t 
+			   \dot{\beta} ]
+			   - \hat{g}_t [ J_s( \dot{\gamma} + \omega_s) \dot{\beta} - (J_t + J_g)
+			   \omega_s \dot{\beta}  + J_s \dot{\gamma} \omega_g ] 
+			   - \hat{g}_g [ J_g \ddot{\beta}  -  J_s \dot{\gamma} \omega_t ]
+		%
+		\end{align}
+		while the RHS of the same equation in our notation is
+		%
+		\[
+		     - [ \hat{\Omega}_s + \dot{\beta} \hat{i}_2 ]  R_{\beta} \Igimrot \dot{x}
+		     - \dot{\beta} R_{\beta} ( \hat{i}_2 \Igimrot - \Igimrot \hat{i}_2 ) R_{\beta}^T \Omega_s
+		     - R_{\beta} \Igimrot \ddot{x}
+		\]
+		%
+		\[
+		=  - \hat{g}_t [ (J_z + I_s) \dot{\gamma} \dot{\beta}  - (J_x + I_g) \dot{\beta} \omega_s
+		   + (J_z + I_s) \dot{\gamma} \omega_g + (J_z + I_s)  - (J_x + I_t) \dot{\beta} \omega_s]
+		   \]
+		 \[
+		 - \hat{g}_g [ (J_x + I_g) \ddot{\beta} - (J_z + I_s) \dot{\gamma} \omega_t ] 		   
+		\] 
+		%
+		\[
+		 - \hat{g}_s [ (J_z + I_s) \ddot{\gamma}  + (J_x + I_g) \dot{\beta} \omega_t  + 
+		 ((J_z + I_s) - (J_x + I_t) ) \dot{\beta} \omega_t ]
+		 \]
+		
+			\end{document}		
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+%\bibliographystyle{ieeetran}
+%\bibliography{../../work/ref}
+
+\end{document}
